@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/kiki19962007bc/expressApi/issues"
   },
-  "homepage": "https://github.com/kiki19962007bc/expressApi#readme"
+  "homepage": "https://github.com/kiki19962007bc/expressApi#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
