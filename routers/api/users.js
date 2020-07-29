@@ -1,6 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const secret = require('../../config/keys').secret;
 
 const User = require('../../models/User');
 
@@ -34,26 +35,36 @@ router.post('/register', (request, response) => {
         })
 })
 
-router.post('/login',(request,response) => {
+router.post('/login', (request, response) => {
     const email = request.body.email;
     const password = request.body.password;
     User.findOne({ email: request.body.email })
-    .then(user => {
-        if(user){
-            bcrypt.compare(password, user.password)
-            .then(result =>{
-                if(result){
-                    return response.json({ status: 'success', message: '登入成功' });
-                }
-                else{
-                    return response.json({ status: 'error', message: '密碼錯誤' });
-                }
-            })
-        }       
-        else{
-            return response.json({ status: 'error', message: '無此登入email' });
-        }
-    })
+        .then(user => {
+            if (user) {
+                bcrypt.compare(password, user.password)
+                    .then(result => {
+                        if (result) {
+                            const rule = {
+                                id: user.id,
+                                name: user.name,
+                                email: user.email,
+                            }
+                            jwt.sign(rule, secret, { expiresIn: 38000 }, (error, token) => {
+                                response.json({
+                                    status: 'success',
+                                    token: 'Bearer ' + token
+                                })
+                            })
+                        }
+                        else {
+                            return response.json({ status: 'error', message: '密碼錯誤' });
+                        }
+                    })
+            }
+            else {
+                return response.json({ status: 'error', message: '無此登入email' });
+            }
+        })
 })
 
 
