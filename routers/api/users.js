@@ -75,19 +75,53 @@ router.post('/edit/:id', passport.authenticate('jwt', { session: false }), (requ
     User.findById(id)
         .then(user => {
             if (user) {
+                if ( id == request.user._id) {
                 user.name = request.body.name
                 user.age = request.body.age
                 user.save()
                     .then(user => response.json(user))
                     .catch(error => response.json({ status: 'error', data: error }));
+                }
+                else{
+                    response.json({ status: 'error', data: '登入ID不一致' })
+                }
             }
             else {
-                response.json({ status: 'error', data: '登入id不一致' })
+                response.json({ status: 'error', data: '無此ID' })
             }
         })
 });
 
+router.get('/delete/:id', passport.authenticate('jwt', { session: false }), (request, response) => {
+    const id = request.params.id;
+    User.findById(id)
+        .then(user => {
+            if (user) {
+                if ( id == request.user._id) {
+                    User.findOneAndDelete({_id: id},)
+                    .then(user => response.json({ data: user, message: '已刪除' }))
+                    .catch(error => response.json({ status: 'error', data: error }));
+                }
+                else{
+                    response.json({ status: 'error', data: '登入ID不一致' })
+                }
+            }
+            else {
+                response.json({ status: 'error', data: '無此ID' })
+            }
+        })
+});
 
+router.get('/current', passport.authenticate('jwt', { session: false }), (request, response) => {
+    response.json(request.user);
+});
+
+router.get('/:id', passport.authenticate('jwt', { session: false }), (request, response) => {
+    const id = request.params.id;
+    User.findById(id)
+    .then(user => response.json(user))
+    .catch(error => response.json({ status: 'error', data: error }));
+});
 
 router.get('/', (request, response) => {
     User.find({}, (error, users) => {
