@@ -9,6 +9,7 @@ const port = 4000;
 const keys = require('./config/keys')
 const users = require('./routers/api/users');
 const feeds = require('./routers/api/feeds');
+const responses = require('./routers/api/responses');
 
 mongoose.connect(keys.mongoUri, { useNewUrlParser: true })
     .then(() => {
@@ -29,5 +30,6 @@ require('./config/passport')(passport);
 
 app.use('/api/users', users)
 app.use('/api/feeds', feeds)
+app.use('/api/responses/', responses)
 
 
