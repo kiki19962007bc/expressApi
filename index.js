@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser')
+const passport = require('passport');
 
 const app = express();
 const port = 4000;
@@ -22,6 +23,9 @@ app.listen(port, () => {
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+require('./config/passport')(passport);
+
 app.use('/api/users', users)
 
 

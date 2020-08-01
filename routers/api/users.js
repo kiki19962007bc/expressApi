@@ -1,8 +1,9 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const secret = require('../../config/keys').secret;
+const passport = require('passport');
 
+const secret = require('../../config/keys').secret;
 const User = require('../../models/User');
 
 const router = express.Router();
@@ -66,6 +67,26 @@ router.post('/login', (request, response) => {
             }
         })
 })
+
+router.post('/edit/:id', passport.authenticate('jwt', { session: false }), (request, response) => {
+    const id = request.params.id;
+    const name = request.body.name;
+    const age = request.body.age;
+    User.findById(id)
+        .then(user => {
+            if (user) {
+                user.name = request.body.name
+                user.age = request.body.age
+                user.save()
+                    .then(user => response.json(user))
+                    .catch(error => response.json({ status: 'error', data: error }));
+            }
+            else {
+                response.json({ status: 'error', data: '登入id不一致' })
+            }
+        })
+});
+
 
 
 router.get('/', (request, response) => {
