@@ -75,14 +75,14 @@ router.post('/edit/:id', passport.authenticate('jwt', { session: false }), (requ
     User.findById(id)
         .then(user => {
             if (user) {
-                if ( id == request.user._id) {
-                user.name = request.body.name
-                user.age = request.body.age
-                user.save()
-                    .then(user => response.json(user))
-                    .catch(error => response.json({ status: 'error', data: error }));
+                if (id == request.user._id) {
+                    user.name = request.body.name
+                    user.age = request.body.age
+                    user.save()
+                        .then(user => response.json({ data: user, message: '已修改' }))
+                        .catch(error => response.json({ status: 'error', data: error }));
                 }
-                else{
+                else {
                     response.json({ status: 'error', data: '登入ID不一致' })
                 }
             }
@@ -97,12 +97,12 @@ router.get('/delete/:id', passport.authenticate('jwt', { session: false }), (req
     User.findById(id)
         .then(user => {
             if (user) {
-                if ( id == request.user._id) {
-                    User.findOneAndDelete({_id: id},)
-                    .then(user => response.json({ data: user, message: '已刪除' }))
-                    .catch(error => response.json({ status: 'error', data: error }));
+                if (id == request.user._id) {
+                    User.findOneAndDelete({ _id: id },)
+                        .then(user => response.json({ data: user, message: '已刪除' }))
+                        .catch(error => response.json({ status: 'error', data: error }));
                 }
-                else{
+                else {
                     response.json({ status: 'error', data: '登入ID不一致' })
                 }
             }
@@ -119,8 +119,8 @@ router.get('/current', passport.authenticate('jwt', { session: false }), (reques
 router.get('/:id', passport.authenticate('jwt', { session: false }), (request, response) => {
     const id = request.params.id;
     User.findById(id)
-    .then(user => response.json(user))
-    .catch(error => response.json({ status: 'error', data: error }));
+        .then(user => response.json(user))
+        .catch(error => response.json({ status: 'error', data: error }));
 });
 
 router.get('/', (request, response) => {
