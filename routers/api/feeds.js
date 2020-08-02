@@ -65,9 +65,9 @@ router.get('/:id', passport.authenticate('jwt', { session: false }), (request, r
 });
 
 router.get('/', (request, response) => {
-    Feed.find({}, (error, feeds) => {
-        response.json(feeds);
-    });
-});
+    Feed.find({})
+        .then(feeds => response.json(feeds))
+        .catch(error => response.json({ status: 'error', data: error }));
+})
 
 module.exports = router;

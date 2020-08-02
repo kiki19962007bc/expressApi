@@ -124,9 +124,9 @@ router.get('/:id', passport.authenticate('jwt', { session: false }), (request, r
 });
 
 router.get('/', (request, response) => {
-    User.find({}, (error, users) => {
-        response.json(users);
-    });
+    User.find({})
+        .then(user => response.json(users))
+        .catch(error => response.json({ status: 'error', data: error }));
 });
 
 module.exports = router;

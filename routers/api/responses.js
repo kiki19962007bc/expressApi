@@ -60,23 +60,23 @@ router.get('/delete/:id', passport.authenticate('jwt', { session: false }), (req
 
 router.get('/getbyid/:id', passport.authenticate('jwt', { session: false }), (request, response) => {
     const id = request.params.id;
-    Response.find({ _id: id }, (error, resp) => {
-        response.json(resp);
-    });
+    Response.find({ _id: id })
+        .then(resp => response.json(resp))
+        .catch(error => response.json({ status: 'error', data: error }));
 });
 
 router.get('/getbyfeed/:feedId', passport.authenticate('jwt', { session: false }), (request, response) => {
     const feedId = request.params.feedId;
-    Response.find({ feedId: feedId }, (error, resp) => {
-        response.json(resp);
-    });
+    Response.find({ feedId: feedId })
+        .then(resp => response.json(resp))
+        .catch(error => response.json({ status: 'error', data: error }));
 });
 
 router.get('/getbyuser/:userId', passport.authenticate('jwt', { session: false }), (request, response) => {
     const userId = request.params.userId;
-    Response.find({ userId: userId }, (error, resp) => {
-        response.json(resp);
-    });
+    Response.find({ userId: userId })
+        .then(resp => response.json(resp))
+        .catch(error => response.json({ status: 'error', data: error }));
 });
 
 module.exports = router;
