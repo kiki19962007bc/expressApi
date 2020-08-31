@@ -37,6 +37,20 @@ router.post('/edit/:id', passport.authenticate('jwt', { session: false }), (requ
         });
 });
 
+router.get('/myfeeds', passport.authenticate('jwt', { session: false }), (request, response) => {
+    const userId = request.user._id;
+    Feed.find({userId:userId })
+        .then(feed => response.json(feed))
+        .catch(error => response.json({ status: 'error', data: error }));
+});
+
+router.get('/getbyuser/:userId', passport.authenticate('jwt', { session: false }), (request, response) => {
+    const userId = request.params.userId;
+    Response.find({ userId: userId })
+        .then(resp => response.json(resp))
+        .catch(error => response.json({ status: 'error', data: error }));
+});
+
 router.get('/delete/:id', passport.authenticate('jwt', { session: false }), (request, response) => {
     const id = request.params.id;
     Feed.findById(id)
@@ -57,12 +71,15 @@ router.get('/delete/:id', passport.authenticate('jwt', { session: false }), (req
         })
 });
 
+
 router.get('/:id', passport.authenticate('jwt', { session: false }), (request, response) => {
     const id = request.params.id;
     Feed.findById(id)
         .then(feed => response.json(feed))
         .catch(error => response.json({ status: 'error', data: error }));
 });
+
+
 
 router.get('/', (request, response) => {
     Feed.find({})
